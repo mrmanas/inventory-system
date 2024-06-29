@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://wwww.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+
+<title>Project Management System</title>
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	th:crossorigin="anonymous">
+
+</head>
+
+
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<div class="card shadow rounded centered-content">
+					<div class="card-body">
+						<h5 class="card-title text-center">Enter Product Details</h5>
+
+
+
+						<form
+							th:action="@{/api/v1/updateProduct/{id}(id=${productAttribute.productId})}"
+							th:object="${productAttribute}" method="POST">
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Name</label> <input type="text"
+									name="productName" th:field="*{productName}"
+									class="form-control" placeholder="enter product name"
+									minlength="2" maxlength="50" required />
+
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Description </label> <input type="text"
+									name="productDescription" th:field="*{productDescription}"
+									class="form-control" placeholder="enter product description"
+									minlength="6" maxlength="200" required />
+
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Category</label> <select name="Product Category"
+									th:field="*{productCategory}">
+									<option class="form-control"
+										th:each="productCategory : ${T(com.sl.app.util.Category).values()}"
+										th:value="${productCategory}" th:text="${productCategory}"></option>
+								</select>
+
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Unit Of Measurement </label> <select
+									name="Product Unit" th:field="*{productUnitOfMeasurement}">
+									<option class="form-control"
+										th:each="productUnitOfMeasurement : ${T(com.sl.app.util.MeasurementUnit).values()}"
+										th:value="${productUnitOfMeasurement}"
+										th:text="${productUnitOfMeasurement}"></option>
+								</select>
+
+							</div>
+
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Purchase Cost </label> <input type="number"
+									name="productAcquiringCost" th:field="*{productAcquiringCost}"
+									class="form-control"
+									placeholder="enter product purchasing cost" min="1" required />
+
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Selling Price </label> <input type="number"
+									name="productSellingPrice" th:field="*{productSellingPrice}"
+									class="form-control" placeholder="enter product selling price"
+									min="1" required />
+
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Current Quantity in Stock </label> <input type="number"
+									name="currentQuantity" th:field="*{currentQuantity}"
+									class="form-control form-group col-xs-3 "
+									placeholder="enter product current Quantity" min="1" required />
+							</div>
+
+							<div
+								class="form-group col-xs-3 font-weight-bold display-5 input-group-sm">
+								<label> Product Reorder Value </label> <input type="number"
+									name="reorderQuantity" th:field="*{reorderQuantity}"
+									class="form-control" placeholder="enter product reorder value"
+									min="1" required />
+							</div>
+
+
+							<button type="submit" class="btn btn-primary">
+								
+								Update Product Details</button>
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>

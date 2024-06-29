@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://wwww.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+
+<title>Inventory Management System</title>
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	th:crossorigin="anonymous">
+
+</head>
+
+<style>
+.centered-card {
+	margin: auto; /* Center horizontally */
+	margin-top: 100px; /* Adjust vertical position */
+}
+</style>
+
+
+</head>
+<body>
+	<div align="center" class="container">
+		<div class="row">
+			<div class="card centered-card">
+				<div class="card-body">
+
+
+					<div class="card-header  text-center mb-3">
+
+						<h4 class="font-weight-bold display-5">Manage Products</h4>
+					</div>
+					<div class="row">
+						<div class="col-lg-3">
+							<a th:href="@{/api/v1/product/new}"
+								class="btn btn-primary font-weight-bold btn-sm "> Add new
+								Product </a>
+						</div>
+						<form method="get" th:action="@{/api/v1/paget/1}"> 
+							<input type="hidden" name="sortField" th:value="${sortField}" />
+							<input type="hidden" name="sortDir" th:value="${sortDir}" /> <input
+								name="keyword" required
+								placeholder="search product by name, description or category "
+								size="40" th:value="${keyword}" th:type="text ">
+							<button class="btn-sm btn-outline-success " type="submit">Search</button>
+							<button class="btn-sm btn-outline-warning " type="submit">Clear</button>
+						</form>
+						
+						<div class="col-sm-3">
+							<a th:href="@{/api/v1/home2}"
+								class="btn btn-primary font-weight-bold btn-sm "> Home </a>
+						</div>
+					</div>
+
+
+
+					<div>
+						<table
+							class="table table-striped table-bordered table-fixed mb-3 mt-2">
+							<thead>
+								<tr>
+									<th><a
+										th:href="@{'/api/v1/paget/' + ${currentPage} + '?sortField=productName&sortDir='+ ${reverseSortDir} + ${keyword != null ? '&keyword='+ keyword : '' }}">
+											Name</a></th>
+									<th><a
+										th:href="@{'/api/v1/paget/' + ${currentPage} + '?sortField=currentQuantity&sortDir='+ ${reverseSortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+											Current Quantity </a></th>
+									<th><a
+										th:href="@{'/api/v1/paget/' + ${currentPage} + '?sortField=reorderQuantity&sortDir='+ ${reverseSortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+											Reorder Quantity </a></th>
+									<th><a
+										th:href="@{'/api/v1/paget/' + ${currentPage} + '?sortField=productAcquiringCost&sortDir='+ ${reverseSortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+											Purchase Price </a></th>
+									<th><a
+										th:href="@{'/api/v1/paget/' + ${currentPage} + '?sortField=productSellingPrice&sortDir='+ ${reverseSortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+											Selling Price </a></th>
+									<th>Actions</th>
+
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="var, counter  :  ${listProducts}">
+									<td th:text="${var.productName}"></td>
+									<td th:text="${var.currentQuantity}"></td>
+									<td th:text="${var.reorderQuantity}"></td>
+									<td th:text="${var.productAcquiringCost}"></td>
+									<td th:text="${var.productSellingPrice}"></td>
+									<td><a
+										th:href="@{/api/v1/products/view/{id}(id=${var.productId})}"
+										class="btn btn-outline-info btn-sm">ViewDetails</a> <a
+										th:onclick="return confirm('Are you Sure!!! you want to UPDATE this product?')"
+										th:href="@{/api/v1/products/edit/{id}(id=${var.productId})}"
+										class="btn btn-outline-warning btn-sm">Update</a> <a
+										th:onclick="return confirm('Are you Sure!!! you want to DELETE this product?')"
+										th:href="@{/api/v1/deleteProduct/{id}(id=${var.productId})}"
+										class="btn btn-outline-danger btn-sm">Delete</a></td>
+							</tbody>
+
+						</table>
+					</div>
+					<div>&nbsp;</div>
+					<div>
+						Total Items : [[${totalItems}]] - Page [[${currentPage}]] of
+						[[${totalPages}]] &nbsp; - &nbsp; <a th:if="${currentPage>1}"
+							th:href="@{'/api/v1/paget/1?sortField=' + ${sortField} + '&sortDir='+ ${sortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">First</a>
+						<span th:unless="${currentPage > 1}">First</span> &nbsp; &nbsp; <a
+							th:if="${currentPage>1}"
+							th:href="@{'/api/v1/paget/' + ${currentPage-1}  + '?sortField=' + ${sortField} + '&sortDir='+ ${sortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">Previous</a>
+						<span th:unless="${currentPage > 1}">Previous</span> &nbsp; &nbsp;
+
+
+						<span th:each="i: ${#numbers.sequence(1,totalPages)}"> <a
+							th:if="${i ne currentPage}"
+							th:href="@{/api/v1/paget/{page}(page=${i}, sortField=${sortField}, sortDir=${sortDir}, keyword=${keyword?: ''})}">
+								[[${i}]] </a> <span th:unless="${i ne currentPage}"> [[${i}]]
+						</span> &nbsp;
+						</span> <a th:if="${currentPage < totalPages}"
+							th:href="@{'/api/v1/paget/' + ${currentPage+1} + '?sortField=' + ${sortField} + '&sortDir='+ ${sortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+							Next</a> <span th:unless="${currentPage < totalPages}">Next </span>&nbsp;
+						&nbsp; <a th:if="${currentPage < totalPages}"
+							th:href="@{'/api/v1/paget/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir='+ ${sortDir} + ${keyword != null ? '&keyword='+ keyword : ''}}">
+							Last</a> <span th:unless="${currentPage < totalPages}">Last </span>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+
+
+</html>
